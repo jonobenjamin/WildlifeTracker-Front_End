@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "209541121506",
+    "project_id": "wildlifetracker-4d28b",
+    "storage_bucket": "wildlifetracker-4d28b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209541121506:android:96cbaa7850451fb54ba5bb",
+        "android_client_info": {
+          "package_name": "wildlife_tracker.V1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWXx5vLbeXXb3RYVpCci4EHsCXIrzOg5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
