@@ -7,15 +7,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'map_screen.dart';
 
-<<<<<<< HEAD
-// API Configuration - Using your live Vercel backend
-const String API_BASE_URL = 'https://wildlife-tracker-gxz5-git-main-jonobenjamins-projects.vercel.app';
-const String API_KEY = '98394a83034f3db48e5acd3ef54bd622c5748ca5bb4fb3ff39c052319711c9a9';
-=======
 // API Configuration - Replace with your Vercel backend URL
-const String API_BASE_URL = String.fromEnvironment('API_BASE_URL', defaultValue: 'https://wildlife-tracker-gxz5-git-main-jonobenjamins-projects.vercel.app');
+const String API_BASE_URL = String.fromEnvironment('API_BASE_URL', defaultValue: 'https://wildlife-tracker-gxz5.vercel.app');
 const String API_KEY = String.fromEnvironment('API_KEY', defaultValue: '98394a83034f3db48e5acd3ef54bd622c5748ca5bb4fb3ff39c052319711c9a9');
->>>>>>> 2c82fef3e55352ad2fe3c61d7029e9e60c1af673
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
