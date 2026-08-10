@@ -3,14 +3,11 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'native_auth_service.dart';
 import 'platform/browser_bridge.dart';
 
-/// Field API auth helpers (Phase 1 dual auth).
+/// Field API auth helpers.
 ///
 /// Preferred: Firebase ID token → `Authorization: Bearer <token>`.
-/// Migration fallback: optional shared `API_KEY` as `x-api-key`.
-///
-/// Logged-in clients do not need the API key for routes that accept Bearer.
-/// Keep passing [apiKey] during migration so older server builds and key-only
-/// fallbacks still work. Do not remove dart-define `API_KEY` yet.
+/// Optional migration fallback: shared `API_KEY` as `x-api-key` when provided
+/// at build time. Field PWA web builds ship without API_KEY.
 ///
 /// UID / role / status for authorization must come from the verified Firebase
 /// session on the server — never from request body fields.
