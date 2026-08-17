@@ -1,16 +1,12 @@
+/// Field API auth helpers — Firebase ID token required (`Authorization: Bearer`).
+///
+/// UID / role / status for authorization must come from the verified Firebase
+/// session on the server — never from request body fields.
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'native_auth_service.dart';
 import 'platform/browser_bridge.dart';
-
-/// Field API auth helpers.
-///
-/// Preferred: Firebase ID token → `Authorization: Bearer <token>`.
-/// Optional migration fallback: shared `API_KEY` as `x-api-key` when provided
-/// at build time. Field PWA web builds ship without API_KEY.
-///
-/// UID / role / status for authorization must come from the verified Firebase
-/// session on the server — never from request body fields.
 
 /// Firebase ID token — live JS auth on web, Firebase Auth on native APK/iOS.
 Future<String?> firebaseIdToken({bool forceRefresh = false}) async {
@@ -42,9 +38,7 @@ Future<String?> waitForFirebaseIdToken({
   return firebaseIdToken(forceRefresh: true);
 }
 
-/// Build headers: Bearer when signed in; optional API key as migration fallback.
 Future<Map<String, String>> fieldApiHeaders({
-  String apiKey = '',
   bool forceRefreshToken = false,
 }) async {
   final headers = <String, String>{
@@ -56,14 +50,10 @@ Future<Map<String, String>> fieldApiHeaders({
   if (token != null && token.isNotEmpty) {
     headers['Authorization'] = 'Bearer $token';
   }
-  if (apiKey.isNotEmpty) {
-    headers['x-api-key'] = apiKey;
-  }
   return headers;
 }
 
-/// True if we can authenticate via Firebase session and/or API key fallback.
-Future<bool> canAuthenticateFieldApi({String apiKey = ''}) async {
+Future<bool> canAuthenticateFieldApi() async {
   final token = await firebaseIdToken();
   if (token != null && token.isNotEmpty) return true;
   if (kIsWeb) {
@@ -72,21 +62,17 @@ Future<bool> canAuthenticateFieldApi({String apiKey = ''}) async {
     );
     if (waited != null && waited.isNotEmpty) return true;
   }
-  return apiKey.isNotEmpty;
+  return false;
 }
 
-/// Run an authenticated request; on HTTP 401, force-refresh the ID token once
-/// and retry. Offline outbox callers should use this so expired tokens recover
-/// without a full re-login when Firebase Auth can still refresh.
 Future<T> withFieldAuthRetry<T>({
-  String apiKey = '',
   required Future<T> Function(Map<String, String> headers) send,
   required int Function(T response) statusCode,
 }) async {
-  var headers = await fieldApiHeaders(apiKey: apiKey);
+  var headers = await fieldApiHeaders();
   var response = await send(headers);
   if (statusCode(response) == 401 && headers.containsKey('Authorization')) {
-    headers = await fieldApiHeaders(apiKey: apiKey, forceRefreshToken: true);
+    headers = await fieldApiHeaders(forceRefreshToken: true);
     response = await send(headers);
   }
   return response;
